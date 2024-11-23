@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.12-slim
+FROM python:3.12-slim AS base
 
 # Set the working directory in the container
 WORKDIR /app
@@ -10,6 +10,13 @@ COPY pyproject.toml poetry.lock ./
 # Install Poetry
 RUN pip install --no-cache-dir poetry
 
+FROM base AS test
+
+RUN poetry install --no-root
+
+COPY . .
+
+FROM base
 # Install the dependencies using Poetry
 RUN poetry install --no-root --no-dev
 
