@@ -83,8 +83,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
-    outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
+
   # Deploy: Deploy the application to the production environment
   deploy:
     runs-on: ubuntu-latest
@@ -99,11 +98,19 @@ jobs:
         with:
           terraform_version: 1.9.8
 
+      # to get image tag, cant use build_and_push output because it contains secret AWS_ACCOUNT_ID 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.ECR_REGION }}.amazonaws.com/devops-test
+          tags: type=sha,prefix=main-
+
       - name: Terraform init & apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          PROD_IMAGE: ${{ needs.build_and_push.outputs.image_tag }}
+          PROD_IMAGE: ${{ steps.meta.outputs.tags }}
         working-directory: ./devops
         run: |
           terraform init
