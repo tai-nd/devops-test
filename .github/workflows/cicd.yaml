@@ -42,7 +42,7 @@ jobs:
         with:
           push: false
           cache-to: type=gha,mode=max
-          cache-from: gha
+          cache-from: type=gha
           tags: devops-test:test-latest
           target: test
           load: true # load built image form buldx to docker
@@ -77,6 +77,16 @@ jobs:
           ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.ECR_REGION }}.amazonaws.com
         run: |
           aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+      # - name: Build production image and push to ECR
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+      #     tags: devops-test:test-latest
+      #     target: test
+      #     load: true # load built image form buldx to docker
 
       - name: Push image to ECR
         run: docker push $PROD_IMAGE
