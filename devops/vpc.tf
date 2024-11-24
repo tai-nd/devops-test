@@ -56,7 +56,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   security_group_id = aws_security_group.devops_test_web.id
   ip_protocol       = "tcp"
   from_port         = 0
-  to_port           = 80
+  to_port           = var.webapp_port
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_https" {
