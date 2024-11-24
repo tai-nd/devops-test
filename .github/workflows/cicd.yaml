@@ -43,8 +43,12 @@ jobs:
         run: docker build -t $PROD_IMAGE .
 
       - name: Login to ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGION: ${{ secrets.ECR_REGION }}
         run: |
-          aws ecr get-login-password --region ${{ secrets.ECR_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
 
       - name: Push image to ECR
         run: docker push $PROD_IMAGE
