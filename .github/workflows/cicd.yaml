@@ -24,7 +24,7 @@ jobs:
         with:
           push: false
           cache-to: type=gha,mode=max
-          cache-from: gha
+          cache-from: type=gha
           tags: devops-test:latest
 
   test:
