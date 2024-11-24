@@ -8,3 +8,5 @@ docker
 client_secrets.json
 mycreds.txt
 poetry.toml
+devops
+.vscode
