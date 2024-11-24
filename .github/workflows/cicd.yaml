@@ -83,7 +83,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
-
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
   # Deploy: Deploy the application to the production environment
   deploy:
     runs-on: ubuntu-latest
@@ -102,7 +103,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          PROD_IMAGE: ${{ steps.meta.outputs.tags }}
+          PROD_IMAGE: ${{ needs.build_and_push.outputs.image_tag }}
         working-directory: ./devops
         run: |
           terraform init
