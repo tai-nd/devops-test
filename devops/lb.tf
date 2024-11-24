@@ -9,7 +9,7 @@ resource "aws_alb" "devops_test_web" {
 
 resource "aws_lb_target_group" "devops_test_web" {
   name        = "devops-test-web"
-  port        = 80
+  port        = var.webapp_port
   protocol    = "HTTP"
   vpc_id      = aws_vpc.devops_test.id
   target_type = "ip"
@@ -17,7 +17,7 @@ resource "aws_lb_target_group" "devops_test_web" {
 
 resource "aws_alb_listener" "devops_test_web" {
   load_balancer_arn = aws_alb.devops_test_web.arn
-  port              = "80"
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
