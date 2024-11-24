@@ -13,6 +13,11 @@ resource "aws_lb_target_group" "devops_test_web" {
   protocol    = "HTTP"
   vpc_id      = aws_vpc.devops_test.id
   target_type = "ip"
+
+  health_check {
+    enabled = true
+    path    = var.webapp_healthcheck_path
+  }
 }
 
 resource "aws_alb_listener" "devops_test_web" {

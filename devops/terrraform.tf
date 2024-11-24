@@ -32,3 +32,8 @@ variable "webapp_port" {
   type    = number
   default = 80
 }
+
+variable "webapp_healthcheck_path" {
+  type    = string
+  default = "/"
+}

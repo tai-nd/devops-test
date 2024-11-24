@@ -98,4 +98,7 @@ jobs:
         working-directory: ./devops
         run: |
           terraform init
-          terraform apply --auto-approve -var webapp_image=$PROD_IMAGE -var webapp_port=3000
+          terraform apply --auto-approve \
+            -var webapp_image=$PROD_IMAGE \
+            -var webapp_port=3000 \
+            -var webapp_healthcheck_path=/healthcheck
