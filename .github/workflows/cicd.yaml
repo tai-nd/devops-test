@@ -59,17 +59,14 @@ jobs:
         with:
           terraform_version: 1.9.8
 
-      - name: Terraform init
+      - name: Terraform init & plan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform init
-
-      - name: Terraform plan
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform plan -var webapp_image=$PROD_IMAGE
+        run: |
+          cd devops
+          terraform init
+          terraform plan -var webapp_image=$PROD_IMAGE
 
       # - name: Terraform apply
       #   run: terraform apply -auto-approve
