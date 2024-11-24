@@ -12,6 +12,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,10 +50,8 @@ jobs:
       - name: Run tests
         run: docker run --network=none --rm devops-test:test-latest poetry run pytest -s
 
-  # Deploy: Deploy the application to the production environment
-  deploy:
+  build_and_push:
     runs-on: ubuntu-latest
-    needs: [build, test]
     if: ${{ success() && github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout code
@@ -84,6 +83,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
+
+  # Deploy: Deploy the application to the production environment
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test, build_and_push]
+    if: ${{ success() && github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v3
