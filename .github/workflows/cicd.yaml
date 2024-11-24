@@ -45,6 +45,7 @@ jobs:
           cache-from: gha
           tags: devops-test:test-latest
           target: test
+          load: true # load built image form buldx to docker
 
       - name: Run tests
         run: docker run --network=none --rm devops-test:test-latest poetry run pytest -s
