@@ -10,15 +10,34 @@ on:
       - main
 
 jobs:
-  # test: build and test
-  build_and_test:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build devops-test
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          cache-to: type=gha,mode=max
+          cache-from: gha
+          tags: devops-test:latest
+
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build image to run test
-        run: docker build --target=test -t devops-test:test-latest .
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          cache-to: type=gha,mode=max
+          cache-from: gha
+          tags: devops-test:test-latest
+          target: test
 
       - name: Run tests
         run: docker run --network=none --rm devops-test:test-latest poetry run pytest -s
