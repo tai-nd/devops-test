@@ -27,3 +27,8 @@ variable "webapp_image" {
   # for testing
   default = "nginx:1.27-alpine"
 }
+
+variable "webapp_port" {
+  type    = number
+  default = 80
+}

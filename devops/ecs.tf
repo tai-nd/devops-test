@@ -57,7 +57,7 @@ resource "aws_ecs_task_definition" "devops_test_web" {
       }
       portMappings = [
         {
-          containerPort = 80
+          containerPort = var.webapp_port
           hostPort      = 80
           protocol      = "tcp"
         }

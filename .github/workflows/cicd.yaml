@@ -66,4 +66,4 @@ jobs:
         run: |
           cd devops
           terraform init
-          terraform apply --auto-approve -var webapp_image=$PROD_IMAGE
+          terraform apply --auto-approve -var webapp_image=$PROD_IMAGE -var webapp_port=3000
