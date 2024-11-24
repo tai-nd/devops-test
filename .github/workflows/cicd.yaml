@@ -35,6 +35,29 @@ jobs:
       - name: Generate image tag base on the commit hash
         run: |
           COMMIT_HASH=$(echo $GITHUB_SHA | cut -c1-7)
-          echo "PROD_TAG=m-$COMMIT_HASH" >> $GITHUB_ENV
+          ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.ECR_REGION }}.amazonaws.com
+          echo "PROD_IMAGE=$ECR_REGISTRY/devops-test:m-$COMMIT_HASH" >> $GITHUB_ENV
+
       - name: Build image for production
-        run: docker build --no-cache -t devops-test:$PROD_TAG .
+        run: docker build -t $PROD_IMAGE .
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region ${{ secrets.ECR_REGION }} | docker login --username AWS --password-stdin $ECR_REGISTRY
+
+      - name: Push image to ECR
+        run: docker push $PROD_IMAGE
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Terraform init
+        run: terraform plan -auto-approve
+
+      - name: Terraform plan
+        run: terraform plan -var webapp_image=$PROD_IMAGE
+
+      # - name: Terraform apply
+      #   run: terraform apply -auto-approve
