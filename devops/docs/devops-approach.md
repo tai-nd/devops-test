@@ -1,5 +1,5 @@
 # Demo
-Site: https://sample-app.aws.mhcp001.uk/
+Site: https://sample-app.aws.mhcp001.uk/healthcheck
 ![](./demo.png)
 
 ECS:

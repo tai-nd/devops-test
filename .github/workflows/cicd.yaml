@@ -1,5 +1,5 @@
 # The pipeline should trigger automatically on code pushes to the main branch of the Github repository.
-name: Build and test
+name: CI/CD
 on:
   push:
     branches:
