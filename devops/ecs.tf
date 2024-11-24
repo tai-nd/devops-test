@@ -79,7 +79,7 @@ resource "aws_ecs_service" "devops_test_web" {
   load_balancer {
     target_group_arn = aws_lb_target_group.devops_test_web.arn
     container_name   = "webapp"
-    container_port   = 80
+    container_port   = var.webapp_port
   }
   launch_type = "FARGATE"
 }
