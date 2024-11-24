@@ -23,7 +23,7 @@ variable "aws_region" {
 }
 
 variable "webapp_image" {
-  type    = string
+  type = string
   # for testing
   default = "nginx:1.27-alpine"
 }

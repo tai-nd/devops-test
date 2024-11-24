@@ -41,6 +41,6 @@ resource "aws_alb_listener" "devops_test_tls" {
     target_group_arn = aws_lb_target_group.devops_test_web.arn
   }
   lifecycle {
-    replace_triggered_by = [ aws_lb_target_group.devops_test_web ]
+    replace_triggered_by = [aws_lb_target_group.devops_test_web]
   }
 }
