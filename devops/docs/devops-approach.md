@@ -117,7 +117,17 @@ And to make out website publicly accessible, we need to connect the ALB with int
 
 Src: [vpc.tf](../vpc.tf)
 
-Next steps/improvements: (TODO)
+>A brief explanation (README file) of your approach and steps involved in deployment
+
+Deployment steps:
+- Create route53 hosted zone & add NS record to point nameserver of domain (or subdomain) to AWS route53 dns servers associated with the hosted zone [dns.tf](../dns.tf)
+- Create s3 bucket to save terraform state [terraform.tf](../terrraform.tf)
+- Configure secrets for github workflows ![](./gha-secrets.png)
+- Trigger pipeline (ex: push to main)
+
+# TODO
+Next steps/improvements:
+- Use a dedicated wsgi server to run flask: https://flask.palletsprojects.com/en/stable/deploying/
 - Use separate security group for ALB & webapp
 - Use a dedicated AWS IAM account with minimal permission for CI/CD or use role + delegate authentication to github OIDC (prefer)
 - Make terraform plan work on approved PR
