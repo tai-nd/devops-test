@@ -10,3 +10,4 @@ mycreds.txt
 poetry.toml
 devops
 .vscode
+.github
