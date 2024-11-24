@@ -33,9 +33,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Generate image tag base on the commit hash
+        env:
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.ECR_REGION }}.amazonaws.com
         run: |
           COMMIT_HASH=$(echo $GITHUB_SHA | cut -c1-7)
-          ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.ECR_REGION }}.amazonaws.com
           echo "PROD_IMAGE=$ECR_REGISTRY/devops-test:m-$COMMIT_HASH" >> $GITHUB_ENV
 
       - name: Build image for production
