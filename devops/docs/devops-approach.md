@@ -11,7 +11,7 @@ Task logs:
 
 ![](./logs.png)
 
-# Steps
+# Approach
 
 1. First, I tried to run the scripts in Read me note in local => Failed.
 Maybe there are something wrong with my local setup?
@@ -49,7 +49,7 @@ This change should be commit & merge in a seprate MR but to keep it simple (for 
 => Github Workflow should handle this requirement easily
 
 ```yaml
-name: Build and test
+name: CI/CD
 on:
   push:
     branches:
@@ -60,12 +60,12 @@ on:
       - main
 
 jobs:
-  build_and_test:
-    # TODO
+  build:
+  test:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build_and_test
+    needs: [build, test]
     # only deploy for push in 'main' AND other jobs are success
     if: ${{ success() && github.ref == 'refs/heads/main' }}
 ```
@@ -84,7 +84,7 @@ I choose to run tests in docker because it bring us some benefits:
 In order to run test in docker we need to update Dockerfile by adding a new test stage that also install dev dependencies.
 
 5. Deploy
-We build and push new image to ecr with aws-cli. And update ecs task definition with new image tag (automate via github action & terraform)
+We build and push new image to ecr with aws-cli. And update ecs task definition with new image tag (automated via github action & terraform)
 
 Setup:
 - VPC: 10.16.0.0/16, we need at least 2 subnets to setup ALB
@@ -95,7 +95,7 @@ Setup:
 
 >Deploy the application image to a container orchestration platform (ECS or EKS)
 
-I used ecs since EKS is more expensive to start with, and use fargate to run containers (because it is easier to setup :v).
+I used ECS since EKS is more expensive to start with, and use fargate to run containers (because it is easier to setup :v).
 
 Src: [ecs.tf](../ecs.tf)
 
@@ -103,7 +103,7 @@ Src: [ecs.tf](../ecs.tf)
 
 Src: [lb.tf](../lb.tf), [certificates.tf](../certificates.tf)
 
-I didn't have any existing certificate, so I issued my self via ACM & route53, but if we have an existing certificate, the process is similar (import the cert to terraform instead of create it).
+I didn't have any existing certificate, so I issued my self via ACM & Route53, but if we have an existing certificate, the process is similar (import the cert to terraform instead of create it, or just use cert arn).
 
 Note: when changing port in aws_lb_target_group we need to recreate the target group but AWS will refuse to destroy the old target group cause there is an aws_alb_listener is depend on it. But terraform wasn't smart enough to do detect it, so we need to add a lifecycle policy for listener:
 
